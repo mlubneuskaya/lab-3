@@ -4,6 +4,7 @@ import gui.table.HornersTableCellRenderer;
 import gui.table.HornersTableModel;
 import gui.table.TableModelParams;
 import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
 import java.util.Arrays;
 import java.util.List;
 import javax.swing.JTable;
@@ -14,6 +15,10 @@ import javax.swing.JComponent;
 import javax.swing.JTextField;
 import javax.swing.JLabel;
 import javax.swing.JButton;
+import javax.swing.JMenuBar;
+import javax.swing.JMenu;
+import javax.swing.AbstractAction;
+import javax.swing.JOptionPane;
 
 
 public class Gui extends JFrame {
@@ -23,6 +28,7 @@ public class Gui extends JFrame {
     private JTextField incrementText;
     private Box tableBox;
     private final TableModelParams tableModelParams;
+    private final HornersTableCellRenderer renderer;
 
     public Gui(UiConfigParams uiConfigParams, TableModelParams tableModelParams) {
         super(uiConfigParams.title);
@@ -31,7 +37,9 @@ public class Gui extends JFrame {
         setLocation((kit.getScreenSize().width - uiConfigParams.width) / 2,
                 (kit.getScreenSize().height - uiConfigParams.height) / 2);
         componentCreator = new ComponentCreator();
+        renderer = new HornersTableCellRenderer();
         this.tableModelParams = tableModelParams;
+        createMenuBar();
         Box rangeBox = createRangeBox();
         Box tableBox = createTableBox();
         Box buttonBox = createButtonBox();
@@ -43,13 +51,36 @@ public class Gui extends JFrame {
         this.setVisible(true);
     }
 
+    private JMenuBar createMenuBar() {
+        JMenuBar menuBar = new JMenuBar();
+        setJMenuBar(menuBar);
+        JMenu tableMenu = createTableMenu();
+        menuBar.add(tableMenu);
+        return menuBar;
+    }
+
+    private JMenu createTableMenu() {
+        JMenu tableMenu = new JMenu("Table");
+        AbstractAction search = new AbstractAction("Value search") {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                String value = JOptionPane.showInputDialog(Gui.this,
+                        "Enter a value", "Value search",
+                        JOptionPane.QUESTION_MESSAGE);
+                renderer.setNeedle(value);
+                getContentPane().repaint();
+            }
+        };
+        tableMenu.add(search);
+        return tableMenu;
+    }
+
     private JTable createTable() {
         double from = Double.parseDouble(fromText.getText());
         double to = Double.parseDouble(toText.getText());
         double increment = Double.parseDouble(incrementText.getText());
         HornersTableModel data = new HornersTableModel(from, to, increment, tableModelParams);
         JTable table = new JTable(data);
-        HornersTableCellRenderer renderer = new HornersTableCellRenderer();
         table.setDefaultRenderer(Double.class, renderer);
         table.setRowHeight(table.getRowHeight() * 4);
         return table;

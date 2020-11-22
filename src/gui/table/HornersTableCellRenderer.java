@@ -2,6 +2,7 @@ package gui.table;
 
 
 import java.awt.Component;
+import java.awt.Color;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import javax.swing.SwingConstants;
@@ -11,6 +12,7 @@ import javax.swing.table.TableCellRenderer;
 
 public class HornersTableCellRenderer implements TableCellRenderer {
     private final DecimalFormat formatter = (DecimalFormat) NumberFormat.getInstance();
+    private String needle = null;
 
     public HornersTableCellRenderer() {
         formatter.setMaximumFractionDigits(5);
@@ -23,6 +25,15 @@ public class HornersTableCellRenderer implements TableCellRenderer {
         String formatted = formatter.format(value);
         JTextField field = new JTextField(formatted);
         field.setHorizontalAlignment(SwingConstants.LEFT);
+        if (col == 1 && needle != null && needle.equals(formatted)) {
+            field.setBackground(new Color(193, 218, 245));
+        } else {
+            field.setBackground(Color.WHITE);
+        }
         return field;
+    }
+
+    public void setNeedle(String needle) {
+        this.needle = needle;
     }
 }
