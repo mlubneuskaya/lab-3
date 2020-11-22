@@ -7,18 +7,7 @@ import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.util.Arrays;
 import java.util.List;
-import javax.swing.JTable;
-import javax.swing.JFrame;
-import javax.swing.Box;
-import javax.swing.JScrollPane;
-import javax.swing.JComponent;
-import javax.swing.JTextField;
-import javax.swing.JLabel;
-import javax.swing.JButton;
-import javax.swing.JMenuBar;
-import javax.swing.JMenu;
-import javax.swing.AbstractAction;
-import javax.swing.JOptionPane;
+import javax.swing.*;
 
 
 public class Gui extends JFrame {
@@ -56,6 +45,8 @@ public class Gui extends JFrame {
         setJMenuBar(menuBar);
         JMenu tableMenu = createTableMenu();
         menuBar.add(tableMenu);
+        JMenu helpMenu = createHelpMenu();
+        menuBar.add(helpMenu);
         return menuBar;
     }
 
@@ -72,6 +63,22 @@ public class Gui extends JFrame {
             }
         };
         tableMenu.add(search);
+        return tableMenu;
+    }
+
+    private JMenu createHelpMenu() {
+        JMenu tableMenu = new JMenu("Help");
+        AbstractAction help = new AbstractAction("About") {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                Toolkit kit = Toolkit.getDefaultToolkit();
+                ImageIcon icon = new ImageIcon("resources/my_photo.jpg");
+                JOptionPane.showMessageDialog(Gui.this, "Lubneuskaya\n10 group",
+                        "About", JOptionPane.INFORMATION_MESSAGE, icon);
+                getContentPane().repaint();
+            }
+        };
+        tableMenu.add(help);
         return tableMenu;
     }
 
