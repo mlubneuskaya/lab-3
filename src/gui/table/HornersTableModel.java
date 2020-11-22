@@ -1,5 +1,6 @@
 package gui.table;
 
+import calculator.PowCalculator;
 import javax.swing.table.AbstractTableModel;
 import calculator.HornerCalculator;
 
@@ -29,7 +30,7 @@ public class HornersTableModel extends AbstractTableModel {
 
     @Override
     public int getColumnCount() {
-        return 2;
+        return 4;
     }
 
     @Override
@@ -37,9 +38,14 @@ public class HornersTableModel extends AbstractTableModel {
         double x = from + increment * row;
         if (col == 0) {
             return x;
-        } else {
+        } else if (col == 1) {
             HornerCalculator calculator = new HornerCalculator();
             return calculator.calculate(x, params.coefficients);
+        } else if (col == 2) {
+            PowCalculator calculator = new PowCalculator();
+            return calculator.calculate(x, params.coefficients);
+        } else {
+            return Math.abs((Double) getValueAt(row, 1) - (Double) getValueAt(row, 2));
         }
     }
 

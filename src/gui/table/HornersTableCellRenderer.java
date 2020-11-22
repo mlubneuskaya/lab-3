@@ -21,8 +21,6 @@ public class HornersTableCellRenderer implements TableCellRenderer {
     public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus,
                                                    int row, int col) {
         String formatted = formatter.format(value);
-        System.out.println(formatted);
-        System.out.println(formatted);
         JTextField field = new JTextField(formatted);
         field.setHorizontalAlignment(SwingConstants.LEFT);
         return field;
