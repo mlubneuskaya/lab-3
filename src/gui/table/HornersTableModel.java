@@ -47,4 +47,9 @@ public class HornersTableModel extends AbstractTableModel {
     public String getColumnName(int column) {
         return params.columnNames[column];
     }
+
+    @Override
+    public Class<?> getColumnClass(int columnIndex) {
+        return Double.class;
+    }
 }

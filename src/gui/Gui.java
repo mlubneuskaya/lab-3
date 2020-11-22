@@ -1,5 +1,6 @@
 package gui;
 
+import gui.table.HornersTableCellRenderer;
 import gui.table.HornersTableModel;
 import gui.table.TableModelParams;
 import java.awt.Toolkit;
@@ -38,6 +39,7 @@ public class Gui extends JFrame {
         List<Box> boxes = Arrays.asList(rangeBox, tableBox, buttonBox);
         componentCreator.insertBoxes(box, boxes);
         this.getContentPane().add(box);
+        getContentPane().validate();
         this.setVisible(true);
     }
 
@@ -47,6 +49,8 @@ public class Gui extends JFrame {
         double increment = Double.parseDouble(incrementText.getText());
         HornersTableModel data = new HornersTableModel(from, to, increment, tableModelParams);
         JTable table = new JTable(data);
+        HornersTableCellRenderer renderer = new HornersTableCellRenderer();
+        table.setDefaultRenderer(Double.class, renderer);
         table.setRowHeight(table.getRowHeight() * 4);
         return table;
     }
