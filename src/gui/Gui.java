@@ -76,7 +76,14 @@ public class Gui extends JFrame {
                 String value = JOptionPane.showInputDialog(Gui.this,
                         "Enter a value", "Value search",
                         JOptionPane.QUESTION_MESSAGE);
-                renderer.setNeedle(value);
+                renderer.setEqualsNeedle(value);
+                getContentPane().repaint();
+            }
+        });
+        tableMenu.add(new AbstractAction("Simple numbers") {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                renderer.setPrimeNeedle(true);
                 getContentPane().repaint();
             }
         });
@@ -161,6 +168,8 @@ public class Gui extends JFrame {
             tableBox.removeAll();
             JTable table = createTable();
             tableBox.add(new JScrollPane(table));
+            renderer.setPrimeNeedle(false);
+            renderer.setEqualsNeedle(null);
             getContentPane().validate();
         });
         JButton reset = componentCreator.createButton("reset");
@@ -169,6 +178,8 @@ public class Gui extends JFrame {
             resetRange();
             JTable table = createTable();
             tableBox.add(new JScrollPane(table));
+            renderer.setPrimeNeedle(false);
+            renderer.setEqualsNeedle(null);
             getContentPane().validate();
         });
         Box buttonBox = Box.createHorizontalBox();
