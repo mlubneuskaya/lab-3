@@ -33,7 +33,7 @@ public class HornersTableModel extends AbstractTableModel {
     public int getRowCount() {
         int rows = 0;
         double i = from;
-        while (i <= to) {
+        while (i <= to + increment / 2) {
             rows++;
             i += Math.abs(increment);
         }

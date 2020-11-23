@@ -23,7 +23,8 @@ public class Main {
         String[] columnNames = new String[]{"x", "polynomial value(Horner's method)",
                 "polynomial value(naive method)", "difference between results"};
         TableModelParams tableModelParams = new TableModelParams(coefficients, columnNames);
-        UiConfigParams uiConfigParams = new UiConfigParams(1300, 700, "Horner's table");
+        UiConfigParams uiConfigParams = new UiConfigParams(1300, 700, "Horner's table",
+                "resources/my_photo.jpg");
         Gui gui = new Gui(uiConfigParams, tableModelParams, configs);
         gui.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
     }

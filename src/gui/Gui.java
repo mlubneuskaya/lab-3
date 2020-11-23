@@ -33,9 +33,12 @@ public class Gui extends JFrame {
     private JTextField incrementText;
     private Box tableBox;
     private HornersTableModel data;
+    private JMenu tableMenu;
+    private JMenu fileMenu;
     private final TableModelParams tableModelParams;
     private final HornersTableCellRenderer renderer;
     private final List<FileWriterConfig> configs;
+    private final UiConfigParams uiConfigParams;
 
 
     public Gui(UiConfigParams uiConfigParams, TableModelParams tableModelParams, List<FileWriterConfig> configs) {
@@ -48,6 +51,7 @@ public class Gui extends JFrame {
         renderer = new HornersTableCellRenderer();
         this.tableModelParams = tableModelParams;
         this.configs = configs;
+        this.uiConfigParams = uiConfigParams;
         createMenuBar();
         Box rangeBox = createRangeBox();
         Box tableBox = createTableBox();
@@ -56,15 +60,16 @@ public class Gui extends JFrame {
         List<Box> boxes = Arrays.asList(rangeBox, tableBox, buttonBox);
         componentCreator.insertBoxes(box, boxes);
         this.getContentPane().add(box);
-        getContentPane().validate();
         this.setVisible(true);
     }
 
     private void createMenuBar() {
         JMenuBar menuBar = new JMenuBar();
         setJMenuBar(menuBar);
-        menuBar.add(createFileMenu());
-        menuBar.add(createTableMenu());
+        fileMenu = createFileMenu();
+        menuBar.add(fileMenu);
+        tableMenu = createTableMenu();
+        menuBar.add(tableMenu);
         menuBar.add(createHelpMenu());
     }
 
@@ -87,6 +92,7 @@ public class Gui extends JFrame {
                 getContentPane().repaint();
             }
         });
+        tableMenu.setEnabled(false);
         return tableMenu;
     }
 
@@ -95,6 +101,7 @@ public class Gui extends JFrame {
         for (FileWriterConfig config : configs) {
             fileMenu.add(createFileAction(config));
         }
+        fileMenu.setEnabled(false);
         return fileMenu;
     }
 
@@ -116,7 +123,7 @@ public class Gui extends JFrame {
         tableMenu.add(new AbstractAction("About") {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-                ImageIcon icon = new ImageIcon("resources/my_photo.jpg");
+                ImageIcon icon = new ImageIcon(uiConfigParams.imageFilePath);
                 JOptionPane.showMessageDialog(Gui.this, "Lubneuskaya\n10 group",
                         "About", JOptionPane.INFORMATION_MESSAGE, icon);
                 getContentPane().repaint();
@@ -137,9 +144,7 @@ public class Gui extends JFrame {
     }
 
     private Box createTableBox() {
-        JTable table = createTable();
         tableBox = Box.createHorizontalBox();
-        tableBox.add(new JScrollPane(table));
         return tableBox;
     }
 
@@ -170,16 +175,18 @@ public class Gui extends JFrame {
             tableBox.add(new JScrollPane(table));
             renderer.setPrimeNeedle(false);
             renderer.setEqualsNeedle(null);
+            tableMenu.setEnabled(true);
+            fileMenu.setEnabled(true);
             getContentPane().validate();
         });
         JButton reset = componentCreator.createButton("reset");
         reset.addActionListener(actionEvent -> {
             tableBox.removeAll();
             resetRange();
-            JTable table = createTable();
-            tableBox.add(new JScrollPane(table));
             renderer.setPrimeNeedle(false);
             renderer.setEqualsNeedle(null);
+            tableMenu.setEnabled(false);
+            fileMenu.setEnabled(false);
             getContentPane().validate();
         });
         Box buttonBox = Box.createHorizontalBox();
