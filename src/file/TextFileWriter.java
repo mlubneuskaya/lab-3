@@ -13,12 +13,12 @@ public class TextFileWriter implements FileWriter {
             PrintStream out = new PrintStream(selectedFile);
             out.println("polynomial values at given points");
             out.print("polynomial: ");
-            int power = 0;
+            int power = coefficients.size()-1;
             double lastCoefficient = coefficients.get(coefficients.size() - 1);
             coefficients.remove(lastCoefficient);
             for (double coefficient : coefficients) {
                 out.print(coefficient + "*x^" + power + " + ");
-                power++;
+                power--;
             }
             out.println(lastCoefficient + "*x^" + power);
             out.println("x changes in range from " + data.getFrom() + " to " + data.getTo() +

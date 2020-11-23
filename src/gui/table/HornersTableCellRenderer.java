@@ -24,7 +24,13 @@ public class HornersTableCellRenderer implements TableCellRenderer {
                                                    int row, int col) {
         String formatted = formatter.format(value);
         JTextField field = new JTextField(formatted);
-        field.setHorizontalAlignment(SwingConstants.LEFT);
+        if (formatted.contains("-")) {
+            field.setHorizontalAlignment(SwingConstants.LEFT);
+        } else if (formatted.equals("0")) {
+            field.setHorizontalAlignment(SwingConstants.CENTER);
+        } else {
+            field.setHorizontalAlignment(SwingConstants.RIGHT);
+        }
         if (col == 1 && needle != null && needle.equals(formatted)) {
             field.setBackground(new Color(193, 218, 245));
         } else {
