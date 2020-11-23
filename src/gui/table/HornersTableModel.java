@@ -17,6 +17,18 @@ public class HornersTableModel extends AbstractTableModel {
         this.params = params;
     }
 
+    public double getFrom() {
+        return from;
+    }
+
+    public double getIncrement() {
+        return increment;
+    }
+
+    public double getTo() {
+        return to;
+    }
+
     @Override
     public int getRowCount() {
         int rows = 0;

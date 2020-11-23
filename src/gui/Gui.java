@@ -1,13 +1,29 @@
 package gui;
 
+
+import file.FileWriterConfig;
 import gui.table.HornersTableCellRenderer;
 import gui.table.HornersTableModel;
 import gui.table.TableModelParams;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
+import java.io.File;
 import java.util.Arrays;
 import java.util.List;
-import javax.swing.*;
+import javax.swing.JTable;
+import javax.swing.JFrame;
+import javax.swing.Box;
+import javax.swing.JScrollPane;
+import javax.swing.JComponent;
+import javax.swing.JTextField;
+import javax.swing.JLabel;
+import javax.swing.JButton;
+import javax.swing.JMenuBar;
+import javax.swing.JMenu;
+import javax.swing.AbstractAction;
+import javax.swing.JOptionPane;
+import javax.swing.ImageIcon;
+import javax.swing.JFileChooser;
 
 
 public class Gui extends JFrame {
@@ -16,10 +32,13 @@ public class Gui extends JFrame {
     private JTextField toText;
     private JTextField incrementText;
     private Box tableBox;
+    private HornersTableModel data;
     private final TableModelParams tableModelParams;
     private final HornersTableCellRenderer renderer;
+    private final List<FileWriterConfig> configs;
 
-    public Gui(UiConfigParams uiConfigParams, TableModelParams tableModelParams) {
+
+    public Gui(UiConfigParams uiConfigParams, TableModelParams tableModelParams, List<FileWriterConfig> configs) {
         super(uiConfigParams.title);
         setSize(uiConfigParams.width, uiConfigParams.height);
         Toolkit kit = Toolkit.getDefaultToolkit();
@@ -28,6 +47,7 @@ public class Gui extends JFrame {
         componentCreator = new ComponentCreator();
         renderer = new HornersTableCellRenderer();
         this.tableModelParams = tableModelParams;
+        this.configs = configs;
         createMenuBar();
         Box rangeBox = createRangeBox();
         Box tableBox = createTableBox();
@@ -40,19 +60,17 @@ public class Gui extends JFrame {
         this.setVisible(true);
     }
 
-    private JMenuBar createMenuBar() {
+    private void createMenuBar() {
         JMenuBar menuBar = new JMenuBar();
         setJMenuBar(menuBar);
-        JMenu tableMenu = createTableMenu();
-        menuBar.add(tableMenu);
-        JMenu helpMenu = createHelpMenu();
-        menuBar.add(helpMenu);
-        return menuBar;
+        menuBar.add(createFileMenu());
+        menuBar.add(createTableMenu());
+        menuBar.add(createHelpMenu());
     }
 
     private JMenu createTableMenu() {
         JMenu tableMenu = new JMenu("Table");
-        AbstractAction search = new AbstractAction("Value search") {
+        tableMenu.add(new AbstractAction("Value search") {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
                 String value = JOptionPane.showInputDialog(Gui.this,
@@ -61,24 +79,42 @@ public class Gui extends JFrame {
                 renderer.setNeedle(value);
                 getContentPane().repaint();
             }
-        };
-        tableMenu.add(search);
+        });
         return tableMenu;
+    }
+
+    private JMenu createFileMenu() {
+        JMenu fileMenu = new JMenu("File");
+        for (FileWriterConfig config : configs) {
+            fileMenu.add(createFileAction(config));
+        }
+        return fileMenu;
+    }
+
+    private AbstractAction createFileAction(FileWriterConfig config) {
+        return new AbstractAction(config.name) {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                JFileChooser fileChooser = new JFileChooser();
+                fileChooser.setCurrentDirectory(new File("."));
+                if (fileChooser.showSaveDialog(Gui.this) == JFileChooser.APPROVE_OPTION) {
+                    config.writer.write(fileChooser.getSelectedFile(), tableModelParams.coefficients, data);
+                }
+            }
+        };
     }
 
     private JMenu createHelpMenu() {
         JMenu tableMenu = new JMenu("Help");
-        AbstractAction help = new AbstractAction("About") {
+        tableMenu.add(new AbstractAction("About") {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-                Toolkit kit = Toolkit.getDefaultToolkit();
                 ImageIcon icon = new ImageIcon("resources/my_photo.jpg");
                 JOptionPane.showMessageDialog(Gui.this, "Lubneuskaya\n10 group",
                         "About", JOptionPane.INFORMATION_MESSAGE, icon);
                 getContentPane().repaint();
             }
-        };
-        tableMenu.add(help);
+        });
         return tableMenu;
     }
 
@@ -86,7 +122,7 @@ public class Gui extends JFrame {
         double from = Double.parseDouble(fromText.getText());
         double to = Double.parseDouble(toText.getText());
         double increment = Double.parseDouble(incrementText.getText());
-        HornersTableModel data = new HornersTableModel(from, to, increment, tableModelParams);
+        data = new HornersTableModel(from, to, increment, tableModelParams);
         JTable table = new JTable(data);
         table.setDefaultRenderer(Double.class, renderer);
         table.setRowHeight(table.getRowHeight() * 4);

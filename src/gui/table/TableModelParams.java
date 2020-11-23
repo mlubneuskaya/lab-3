@@ -3,7 +3,7 @@ package gui.table;
 import java.util.List;
 
 public class TableModelParams {
-    List<Double> coefficients;
+    public List<Double> coefficients;
     String[] columnNames;
 
     public TableModelParams(List<Double> coefficients, String[] columnNames) {
